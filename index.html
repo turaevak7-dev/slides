@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Теория графов | Вариант 11</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="presentation">
+        <button class="nav-toggle" id="navToggle">☰</button>
+        
+        <nav class="side-nav" id="sideNav">
+            <h3>Навигация</h3>
+            <a href="#slide1" class="nav-link">1. Титульный</a>
+            <a href="#slide3" class="nav-link">2. Что такое граф</a>
+            <a href="#slide4" class="nav-link">3. Типы графов</a>
+            <a href="#slide5" class="nav-link">4. Применение графов</a>
+            <a href="#slide7" class="nav-link">5. 7 мостов</a>
+            <a href="#slide8" class="nav-link">6. Решение задачи</a>
+            <a href="#slide10" class="nav-link">7. Алгоритм Дейкстры</a>
+            <a href="#slide11" class="nav-link">8. Как работает</a>
+            <a href="#slide14" class="nav-link">9. Ортодромы</a>
+            <a href="#slide15" class="nav-link">10. Калькулятор</a>
+            <a href="#slide16" class="nav-link">11. Карта России</a>
+            <a href="#slide20" class="nav-link">12. Картинки</a>
+            <a href="#slide23" class="nav-link">13. Конец</a>
+        </nav>
+
+        <div class="slides-container">
+            <!-- Слайд 1 -->
+            <div id="slide1" class="slide active">
+                <div class="content">
+                    <h1>Теория графов</h1>
+                    <h2>Вариант №11</h2>
+                    <div class="info">
+                        <p>Выполнил студент направления МиКН, группы ОБ-02.03.01.03-41, Тураева Ксения</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 2 -->
+            <div id="slide2" class="slide">
+                <div class="content">
+                    <h1>ТЕОРИЯ ГРАФОВ</h1>
+                </div>
+            </div>
+
+            <!-- Слайд 3 -->
+            <div id="slide3" class="slide">
+                <div class="content">
+                    <h1>Что такое граф?</h1>
+                    <div class="card">
+                        <h3>Определение</h3>
+                        <p>Граф — это набор вершин и рёбер.</p>
+                        <p><strong>G = (V, E)</strong></p>
+                        <ul>
+                            <li><strong>V</strong> — вершины (узлы)</li>
+                            <li><strong>E</strong> — рёбра (связи)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 4 -->
+            <div id="slide4" class="slide">
+                <div class="content">
+                    <h1>Типы графов</h1>
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Ориентированный</h3>
+                            <p>Рёбра имеют направление</p>
+                            <div>A → B → C</div>
+                        </div>
+                        <div class="card">
+                            <h3>Неориентированный</h3>
+                            <p>Рёбра без направления</p>
+                            <div>A — B — C</div>
+                        </div>
+                        <div class="card">
+                            <h3>Взвешенный</h3>
+                            <p>Рёбра имеют вес</p>
+                            <div>A—[5]—B—[3]—C</div>
+                        </div>
+                        <div class="card">
+                            <h3>Связный</h3>
+                            <p>Все вершины связаны</p>
+                            <div>все соединены</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 5 -->
+            <div id="slide5" class="slide">
+                <div class="content">
+                    <h1>Где используются графы?</h1>
+                    <div class="grid">
+                        <div class="card">
+                            <h3>Соцсети</h3>
+                            <p>Друзья = вершины<br>Дружба = рёбра</p>
+                        </div>
+                        <div class="card">
+                            <h3>Навигация</h3>
+                            <p>Города = вершины<br>Дороги = рёбра</p>
+                        </div>
+                        <div class="card">
+                            <h3>Сети</h3>
+                            <p>Компьютеры = вершины<br>Соединения = рёбра</p>
+                        </div>
+                        <div class="card">
+                            <h3>Биология</h3>
+                            <p>Гены = вершины<br>Взаимодействия = рёбра</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 6 -->
+            <div id="slide6" class="slide">
+                <div class="content">
+                    <h1>7 МОСТОВ</h1>
+                </div>
+            </div>
+
+            <!-- Слайд 7 -->
+            <div id="slide7" class="slide">
+                <div class="content">
+                    <h1>Задача о 7 мостах</h1>
+                    <div class="card">
+                        <h3>Формулировка</h3>
+                        <p>Можно ли пройти по всем 7 мостам Кёнигсберга, проходя по каждому только один раз?</p>
+                    </div>
+                    <div class="card">
+                        <h3>Графовая модель</h3>
+                        <ul>
+                            <li>4 участка земли = 4 вершины</li>
+                            <li>7 мостов = 7 рёбер</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 8 -->
+            <div id="slide8" class="slide">
+                <div class="content">
+                    <h1>Решение задачи</h1>
+                    <div class="card theorem">
+                        <h3>Теорема Эйлера</h3>
+                        <p>Эйлеров цикл существует ⇔ все вершины имеют чётную степень</p>
+                    </div>
+                    <div class="card">
+                        <h3>Для Кёнигсберга:</h3>
+                        <table>
+                            <tr><th>Вершина</th><th>Степень</th><th>Чётность</th></tr>
+                            <tr><td>A</td><td>3</td><td>❌ Нечёт</td></tr>
+                            <tr><td>B</td><td>5</td><td>❌ Нечёт</td></tr>
+                            <tr><td>C</td><td>3</td><td>❌ Нечёт</td></tr>
+                            <tr><td>D</td><td>3</td><td>❌ Нечёт</td></tr>
+                        </table>
+                        <p style="margin-top: 15px;"><strong>Вывод:</strong> Решения нет</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 9 -->
+            <div id="slide9" class="slide">
+                <div class="content">
+                    <h1>АЛГОРИТМ ДЕЙКСТРЫ</h1>
+                </div>
+            </div>
+
+            <!-- Слайд 10 -->
+            <div id="slide10" class="slide">
+                <div class="content">
+                    <h1>Алгоритм Дейкстры</h1>
+                    <div class="card">
+                        <h3>Что делает?</h3>
+                        <p>Находит кратчайший путь во взвешенном графе</p>
+                    </div>
+                    <div class="card">
+                        <h3>Особенности</h3>
+                        <ul>
+                            <li>Только неотрицательные веса</li>
+                            <li>Жадный алгоритм</li>
+                            <li>Сложность: O(V²)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 11 -->
+            <div id="slide11" class="slide">
+                <div class="content">
+                    <h1>Как работает?</h1>
+                    <div class="grid">
+                        <div class="card">
+                            <div class="step-num">1</div>
+                            <h4>Инициализация</h4>
+                            <p>Начальной вершине: 0<br>Остальным: ∞</p>
+                        </div>
+                        <div class="card">
+                            <div class="step-num">2</div>
+                            <h4>Выбор вершины</h4>
+                            <p>Берём вершину с минимальным расстоянием</p>
+                        </div>
+                        <div class="card">
+                            <div class="step-num">3</div>
+                            <h4>Обновление</h4>
+                            <p>Пересчитываем расстояния до соседей</p>
+                        </div>
+                        <div class="card">
+                            <div class="step-num">4</div>
+                            <h4>Повторение</h4>
+                            <p>Повторяем шаги 2-3 для всех вершин</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 12 -->
+            <div id="slide12" class="slide">
+                <div class="content">
+                    <h1>Пример графа</h1>
+                    <div class="card" style="text-align: center;">
+                        <div style="margin: 20px;">
+                            <div style="margin: 10px;">
+                                <span class="node">A (0)</span> 
+                                <span class="edge">---[6]---></span> 
+                                <span class="node">B (∞)</span>
+                            </div>
+                            <div style="margin: 10px;">
+                                <span class="node">A (0)</span> 
+                                <span class="edge">---[2]---></span> 
+                                <span class="node">C (∞)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 13 -->
+            <div id="slide13" class="slide">
+                <div class="content">
+                    <h1>ПРАКТИКА: КАРТА</h1>
+                </div>
+            </div>
+
+            <!-- Слайд 14 -->
+            <div id="slide14" class="slide">
+                <div class="content">
+                    <h1>Ортодромы</h1>
+                    <div class="card">
+                        <h3>Что это?</h3>
+                        <p>Кратчайший путь между двумя точками на сфере</p>
+                    </div>
+                    <div class="card">
+                        <h3>Формула</h3>
+                        <div class="code">
+                            d = R × arccos(sin φ₁ sin φ₂ + cos φ₁ cos φ₂ cos Δλ)<br>
+                            R = 6371 км (радиус Земли)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 15 -->
+            <div id="slide15" class="slide">
+                <div class="content">
+                    <h1>Калькулятор расстояний</h1>
+                    <div class="controls">
+                        <div class="select-group">
+                            <label>Город 1:</label>
+                            <select id="city1">
+                                <option value="">Выберите...</option>
+                            </select>
+                        </div>
+                        <div class="select-group">
+                            <label>Город 2:</label>
+                            <select id="city2">
+                                <option value="">Выберите...</option>
+                            </select>
+                        </div>
+                        <div class="buttons">
+                            <button id="calculate">Рассчитать</button>
+                            <button id="clear">Очистить</button>
+                        </div>
+                    </div>
+                    <div class="card results">
+                        <h3>Результат:</h3>
+                        <div id="result">Выберите два города</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 16 -->
+            <div id="slide16" class="slide">
+                <div class="content">
+                    <h1>Карта России</h1>
+                    <div id="map"></div>
+                </div>
+            </div>
+
+            <!-- Слайд 17 -->
+            <div id="slide17" class="slide">
+                <div class="content">
+                    <h1>Примеры расстояний</h1>
+                    <div class="card">
+                        <table>
+                            <tr><td>Москва → СПб</td><td>634 км</td></tr>
+                            <tr><td>Москва → Владивосток</td><td>6,418 км</td></tr>
+                            <tr><td>Калининград → Сахалин</td><td>7,890 км</td></tr>
+                            <tr><td>Сочи → Якутск</td><td>5,672 км</td></tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 18 -->
+            <div id="slide18" class="slide">
+                <div class="content">
+                    <h1>Как работает?</h1>
+                    <div class="card">
+                        <div class="code">
+                            function calculateDistance(city1, city2) {<br>
+                            &nbsp;&nbsp;const R = 6371;<br>
+                            &nbsp;&nbsp;const lat1 = toRad(city1.latitude);<br>
+                            &nbsp;&nbsp;const lon1 = toRad(city1.longitude);<br>
+                            &nbsp;&nbsp;const lat2 = toRad(city2.latitude);<br>
+                            &nbsp;&nbsp;const lon2 = toRad(city2.longitude);<br>
+                            &nbsp;&nbsp;return Math.round(R * c);<br>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 19 -->
+            <div id="slide19" class="slide">
+                <div class="content">
+                    <h1>ВЕСЁЛЫЕ КАРТИНКИ</h1>
+                </div>
+            </div>
+
+            <!-- Слайд 20 -->
+            <div id="slide20" class="slide">
+                <div class="content">
+                    <div class="image-full">
+                        <img src="images/meme1.jpg" alt="Мем про графы">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 21 -->
+            <div id="slide21" class="slide">
+                <div class="content">
+                    <div class="image-full">
+                        <img src="images/meme2.jpg" alt="Мем про программиста и графы">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 22 -->
+            <div id="slide22" class="slide">
+                <div class="content">
+                    <div class="image-full">
+                        <img src="images/meme3.jpg" alt="Мем про алгоритм Дейкстры">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Слайд 23 -->
+            <div id="slide23" class="slide">
+                <div class="content">
+                    <h1>Спасибо за просмотр!</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-nav">
+            <button id="prev">← Назад</button>
+            <div class="counter">Слайд <span id="current">1</span> / <span id="total">23</span></div>
+            <button id="next">Вперёд →</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="cities.js"></script>
+    <script src="map.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
