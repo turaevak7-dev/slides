@@ -20,6 +20,6 @@
 - index.html
 - style.css
 - script.js
-- map-app.js
+- map.js
 - cities.js
 - README.md
