@@ -1,68 +1,39 @@
-// Навигация по презентации
 document.addEventListener('DOMContentLoaded', function() {
     const slides = document.querySelectorAll('.slide');
     const totalSlides = slides.length;
     let currentSlide = 0;
     
-    // Элементы навигации
     const prevBtn = document.getElementById('prev');
     const nextBtn = document.getElementById('next');
+    const currentSpan = document.getElementById('current');
+    const totalSpan = document.getElementById('total');
     const navToggle = document.getElementById('navToggle');
     const sideNav = document.getElementById('sideNav');
     const navLinks = document.querySelectorAll('.nav-link');
-    const currentSpan = document.getElementById('current');
-    const totalSpan = document.getElementById('total');
     
-    // Инициализация
     totalSpan.textContent = totalSlides;
-    updateSlideCounter();
-    showSlide(currentSlide);
     
-    // Навигация по слайдам
-    function goToSlide(n) {
-        if (n < 0) n = totalSlides - 1;
-        if (n >= totalSlides) n = 0;
+    function showSlide(index) {
+        if (index < 0) index = 0;
+        if (index >= totalSlides) index = totalSlides - 1;
         
-        currentSlide = n;
-        showSlide(currentSlide);
-        updateSlideCounter();
-        
-        // Если перешли на слайд с картой, инициализируем карту
-        if (currentSlide === 15 && typeof initMap === 'function') {
-            setTimeout(initMap, 100);
-        }
-    }
-    
-    function showSlide(n) {
-        // Скрываем все слайды
         slides.forEach(slide => {
-            slide.classList.remove('active', 'prev', 'next');
+            slide.classList.remove('active');
         });
         
-        // Показываем текущий слайд
-        slides[n].classList.add('active');
+        slides[index].classList.add('active');
+        currentSlide = index;
+        currentSpan.textContent = index + 1;
     }
     
-    function updateSlideCounter() {
-        currentSpan.textContent = currentSlide + 1;
-        
-        // Обновляем активную ссылку в навигации
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            const href = link.getAttribute('href');
-            if (href === `#slide${currentSlide + 1}`) {
-                link.classList.add('active');
-            }
-        });
-    }
-    
-    // События
-    prevBtn.addEventListener('click', function() {
-        goToSlide(currentSlide - 1);
-    });
+    showSlide(0);
     
     nextBtn.addEventListener('click', function() {
-        goToSlide(currentSlide + 1);
+        showSlide(currentSlide + 1);
+    });
+    
+    prevBtn.addEventListener('click', function() {
+        showSlide(currentSlide - 1);
     });
     
     navToggle.addEventListener('click', function() {
@@ -72,30 +43,40 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks.forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSlide = parseInt(targetId.replace('#slide', '')) - 1;
-            goToSlide(targetSlide);
+            const target = this.getAttribute('href');
+            const slideId = target.replace('#slide', '');
+            const slideIndex = parseInt(slideId) - 1;
+            
+            showSlide(slideIndex);
             sideNav.classList.remove('active');
         });
     });
     
-    // Горячие клавиши
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowLeft') {
-            goToSlide(currentSlide - 1);
-        }
-        if (e.key === 'ArrowRight') {
-            goToSlide(currentSlide + 1);
-        }
-        if (e.key === 'Escape') {
+        if (e.key === 'ArrowRight' || e.key === ' ') {
+            showSlide(currentSlide + 1);
+            e.preventDefault();
+        } else if (e.key === 'ArrowLeft') {
+            showSlide(currentSlide - 1);
+            e.preventDefault();
+        } else if (e.key === 'Escape') {
             sideNav.classList.remove('active');
         }
     });
-    
-    // Закрытие меню при клике вне его
-    document.addEventListener('click', function(e) {
-        if (!sideNav.contains(e.target) && e.target !== navToggle) {
-            sideNav.classList.remove('active');
+// Отслеживаем переключение слайдов для карты
+function checkForMapSlide() {
+    const activeSlide = document.querySelector('.slide.active');
+    if (activeSlide && activeSlide.id === 'slide16') {
+        // Если есть карта на странице, инициализируем её
+        if (document.getElementById('map') && typeof initMap === 'function') {
+            setTimeout(initMap, 500);
         }
-    });
+    }
+}
+
+// Проверяем при переключении слайдов
+document.addEventListener('slideChange', checkForMapSlide);
+
+// Проверяем при загрузке
+document.addEventListener('DOMContentLoaded', checkForMapSlide);
 });
