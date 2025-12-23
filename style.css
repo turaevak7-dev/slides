@@ -1,3 +1,4 @@
+/* style.css - ПОЛНЫЙ ФАЙЛ ДЛЯ ПРЕЗЕНТАЦИИ */
 * {
     margin: 0;
     padding: 0;
@@ -11,6 +12,8 @@ body {
     min-height: 100vh;
     overflow-x: hidden;
 }
+
+/* ===== ПРЕЗЕНТАЦИЯ ===== */
 .presentation {
     display: flex;
     flex-direction: column;
@@ -108,13 +111,21 @@ body {
     align-items: center;
     justify-content: center;
     opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s;
+    transform: translateX(100%);
+    transition: transform 0.8s, opacity 0.8s;
 }
 
 .slide.active {
     opacity: 1;
-    visibility: visible;
+    transform: translateX(0);
+}
+
+.slide.prev {
+    transform: translateX(-100%);
+}
+
+.slide.next {
+    transform: translateX(100%);
 }
 
 .content {
@@ -354,7 +365,19 @@ select:focus {
     overflow: hidden;
 }
 
-/* ===== Стили Leaflet ===== */
+/* Стили для выбранных маркеров */
+.selected-city {
+    filter: drop-shadow(0 0 10px #00fff5) !important;
+    z-index: 1000 !important;
+}
+
+/* Стили линии на карте */
+.leaflet-pane .leaflet-overlay-pane svg path {
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
+
+/* Стили Leaflet */
 .leaflet-container {
     font-family: 'Arial', sans-serif;
     background: #1a1a2e !important;
@@ -387,6 +410,10 @@ select:focus {
     background-color: #00fff5 !important;
 }
 
+.leaflet-control-zoom a:first-child {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
 /* Стили для всплывающих окон */
 .leaflet-popup-content-wrapper {
     background: #1a1a2e !important;
@@ -400,6 +427,23 @@ select:focus {
     font-family: 'Arial', sans-serif !important;
     font-size: 14px !important;
     line-height: 1.4 !important;
+}
+
+.leaflet-popup-tip {
+    background: #1a1a2e !important;
+    border: 2px solid #00adb5 !important;
+}
+
+/* Стили для подсказок */
+.leaflet-tooltip {
+    background: rgba(26, 26, 46, 0.9) !important;
+    border: 1px solid #00adb5 !important;
+    color: #00fff5 !important;
+    font-weight: bold !important;
+}
+
+.leaflet-tooltip-top:before {
+    border-top-color: #00adb5 !important;
 }
 
 /* ===== ИЗОБРАЖЕНИЯ ===== */
@@ -493,6 +537,16 @@ select:focus {
     color: #b0b0b0;
 }
 
+/* ===== АНИМАЦИИ ===== */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card, .controls, .image-full {
+    animation: fadeIn 0.6s ease-out;
+}
+
 /* ===== АДАПТИВНОСТЬ ===== */
 @media (max-width: 768px) {
     h1 { font-size: 2.5rem; }
@@ -572,3 +626,65 @@ select:focus {
 ::-webkit-scrollbar-thumb:hover {
     background: #00fff5;
 }
+
+/* ===== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ МАРКЕРОВ ===== */
+.marker-cluster-small {
+    background-color: rgba(0, 173, 181, 0.6) !important;
+}
+
+.marker-cluster-small div {
+    background-color: rgba(0, 173, 181, 0.8) !important;
+    color: white !important;
+}
+
+/* ===== ЗАГРУЗКА ===== */
+.loading {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    color: #00adb5;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 173, 181, 0.3);
+    border-top: 5px solid #00adb5;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== ОШИБКИ ===== */
+.error-message {
+    background: rgba(255, 87, 34, 0.1);
+    border: 2px solid #ff5722;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    margin: 20px 0;
+    color: #ff5722;
+}
+
+.error-message h3 {
+    color: #ff5722;
+}
+
+/* ===== УТИЛИТЫ ===== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.mt-20 { margin-top: 20px; }
+.mb-20 { margin-bottom: 20px; }
+.mt-40 { margin-top: 40px; }
+.mb-40 { margin-bottom: 40px; }
+
+.hidden { display: none; }
