@@ -21,5 +21,5 @@
 - style.css
 - script.js
 - map.js
-- cities.js
+- images
 - README.md
