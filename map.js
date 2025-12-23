@@ -1,6 +1,5 @@
-console.log('✅ map.js загружен');
+console.log('map.js загружен');
 
-// ВСЕ 85 ГОРОДОВ РОССИИ (административные центры)
 const cities = [
     {"city":"Майкоп","region":"Адыгея","latitude":44.6098268,"longitude":40.1006527},
     {"city":"Горно-Алтайск","region":"Алтай","latitude":51.9582681,"longitude":85.9602957},
@@ -88,16 +87,14 @@ const cities = [
     {"city":"Симферополь","region":"Республика Крым","latitude":45.0402,"longitude":34.0059}
 ];
 
-console.log(`📊 Загружено ${cities.length} городов России`);
+console.log(` Загружено ${cities.length} городов России`);
 
-// Глобальные переменные
 let map = null;
 let currentMarkers = [];
 let currentLine = null;
 
-// === ИНИЦИАЛИЗАЦИЯ КАЛЬКУЛЯТОРА (ВСЕГДА РАБОТАЕТ) ===
 function initCalculator() {
-    console.log('🧮 Инициализация калькулятора...');
+    console.log(' Инициализация калькулятора...');
     
     const city1 = document.getElementById('city1');
     const city2 = document.getElementById('city2');
@@ -106,26 +103,21 @@ function initCalculator() {
         console.error('Элементы калькулятора не найдены!');
         return;
     }
-    
-    // ЗАПОЛНЯЕМ СПИСКИ ГОРОДАМИ
+ 
     fillSelect(city1);
     fillSelect(city2);
-    
-    // Вешаем обработчики
+   
     document.getElementById('calculate').addEventListener('click', calculate);
     document.getElementById('clear').addEventListener('click', clearAll);
     
-    console.log('✅ Калькулятор готов!');
+    console.log('Калькулятор готов!');
 }
 
-// ЗАПОЛНИТЬ SELECT ГОРОДАМИ
 function fillSelect(select) {
     console.log(`Заполняю select: ${select.id}`);
-    
-    // Очищаем
+   
     select.innerHTML = '<option value="">Выберите город...</option>';
-    
-    // Добавляем города
+   
     cities.forEach(city => {
         const option = document.createElement('option');
         option.value = city.city; // Сохраняем название города
@@ -136,9 +128,8 @@ function fillSelect(select) {
     console.log(`Добавлено ${cities.length} городов в ${select.id}`);
 }
 
-// === ИНИЦИАЛИЗАЦИЯ КАРТЫ (ТОЛЬКО НА СЛАЙДЕ 16) ===
 function initMap() {
-    console.log('🗺️ Инициализация карты...');
+    console.log(' Инициализация карты...');
     
     const mapElement = document.getElementById('map');
     if (!mapElement) {
@@ -156,7 +147,7 @@ function initMap() {
             maxZoom: 19
         }).addTo(map);
         
-        console.log('✅ Карта создана');
+        console.log('Карта создана');
         
         // Добавляем города на карту
         addCitiesToMap();
@@ -168,9 +159,8 @@ function initMap() {
     }
 }
 
-// ДОБАВИТЬ ГОРОДА НА КАРТУ
 function addCitiesToMap() {
-    console.log(`📍 Добавляю ${cities.length} городов на карту...`);
+    console.log(`Добавляю ${cities.length} городов на карту...`);
     
     cities.forEach(city => {
         L.marker([city.latitude, city.longitude])
@@ -179,15 +169,13 @@ function addCitiesToMap() {
     });
 }
 
-// === РАСЧЕТ РАССТОЯНИЯ ===
 function calculate() {
-    console.log('📏 Рассчитываю расстояние...');
+    console.log(' Рассчитываю расстояние...');
     
     const city1Name = document.getElementById('city1').value;
     const city2Name = document.getElementById('city2').value;
     const resultDiv = document.getElementById('result');
-    
-    // Проверки
+
     if (!city1Name || !city2Name) {
         resultDiv.innerHTML = '<span style="color:red;">Выберите оба города!</span>';
         return;
@@ -197,8 +185,7 @@ function calculate() {
         resultDiv.innerHTML = '<span style="color:red;">Выберите разные города!</span>';
         return;
     }
-    
-    // Ищем города
+   
     const city1 = cities.find(c => c.city === city1Name);
     const city2 = cities.find(c => c.city === city2Name);
     
@@ -206,11 +193,9 @@ function calculate() {
         resultDiv.innerHTML = '<span style="color:red;">Город не найден!</span>';
         return;
     }
-    
-    // Считаем расстояние
+
     const distance = getDistance(city1, city2);
-    
-    // Показываем результат
+   
     resultDiv.innerHTML = `
         <div style="text-align:center;">
             <div style="font-size:36px;color:#ff5722;font-weight:bold;">
@@ -221,8 +206,7 @@ function calculate() {
             </div>
         </div>
     `;
-    
-    // Рисуем на карте (если карта есть)
+ 
     if (map) {
         drawRouteOnMap(city1, city2, distance);
     } else {
@@ -232,7 +216,6 @@ function calculate() {
     }
 }
 
-// ФОРМУЛА РАСЧЕТА
 function getDistance(city1, city2) {
     const R = 6371;
     const lat1 = city1.latitude * Math.PI / 180;
@@ -248,12 +231,10 @@ function getDistance(city1, city2) {
     return Math.round(R * c);
 }
 
-// НАРИСОВАТЬ МАРШРУТ НА КАРТЕ
 function drawRouteOnMap(city1, city2, distance) {
-    // Очистить старое
+ 
     clearRoute();
-    
-    // Маркеры
+ 
     const marker1 = L.marker([city1.latitude, city1.longitude], {
         icon: L.divIcon({
             html: '<div style="background:red;color:white;border-radius:50%;width:35px;height:35px;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid white;">A</div>',
@@ -269,8 +250,7 @@ function drawRouteOnMap(city1, city2, distance) {
     }).addTo(map);
     
     currentMarkers = [marker1, marker2];
-    
-    // КРАСНАЯ ЛИНИЯ
+
     currentLine = L.polyline([
         [city1.latitude, city1.longitude],
         [city2.latitude, city2.longitude]
@@ -280,7 +260,6 @@ function drawRouteOnMap(city1, city2, distance) {
         opacity: 0.8
     }).addTo(map);
     
-    // Надпись с расстоянием
     const midLat = (city1.latitude + city2.latitude) / 2;
     const midLon = (city1.longitude + city2.longitude) / 2;
     
@@ -292,8 +271,7 @@ function drawRouteOnMap(city1, city2, distance) {
     }).addTo(map);
     
     currentMarkers.push(label);
-    
-    // Центрировать карту
+   
     const bounds = L.latLngBounds([
         [city1.latitude, city1.longitude],
         [city2.latitude, city2.longitude]
@@ -301,7 +279,6 @@ function drawRouteOnMap(city1, city2, distance) {
     map.fitBounds(bounds, { padding: [50, 50] });
 }
 
-// ОЧИСТИТЬ МАРШРУТ
 function clearRoute() {
     currentMarkers.forEach(marker => {
         if (marker && map.hasLayer(marker)) {
@@ -316,34 +293,28 @@ function clearRoute() {
     }
 }
 
-// ОЧИСТИТЬ ВСЕ
 function clearAll() {
     document.getElementById('city1').value = '';
     document.getElementById('city2').value = '';
     document.getElementById('result').innerHTML = 'Выберите два города';
-    
-    // Очистить карту
+ 
     if (map) {
         clearRoute();
         map.setView([61.5240, 105.3188], 3);
     }
 }
 
-// === ГЛАВНАЯ ИНИЦИАЛИЗАЦИЯ ===
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🚀 Документ загружен');
-    
-    // 1. ВСЕГДА инициализируем калькулятор (на слайде 15)
+    console.log(' Документ загружен');
+
     initCalculator();
-    
-    // 2. Следим за переключением слайдов
+  
     function checkSlide() {
         const activeSlide = document.querySelector('.slide.active');
         
         if (activeSlide) {
-            // Если слайд 15 (калькулятор) - убедимся что калькулятор работает
             if (activeSlide.id === 'slide15') {
-                console.log('📱 Активен слайд с калькулятором');
+                console.log(' Активен слайд с калькулятором');
                 // Проверим что списки заполнены
                 const city1 = document.getElementById('city1');
                 if (city1 && city1.options.length <= 1) {
@@ -352,13 +323,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     fillSelect(document.getElementById('city2'));
                 }
             }
-            
-            // Если слайд 16 (карта) - инициализируем карту
             if (activeSlide.id === 'slide16' && !map) {
-                console.log('🗺️ Перешли на слайд с картой');
+                console.log(' Перешли на слайд с картой');
                 setTimeout(initMap, 300);
-                
-                // Если есть отложенный маршрут, отрисуем его
+             
                 if (window.pendingRoute) {
                     setTimeout(() => {
                         drawRouteOnMap(
@@ -372,11 +340,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     }
-    
-    // Проверим сразу
     checkSlide();
     
-    // Наблюдаем за сменой слайдов
     const observer = new MutationObserver(function() {
         checkSlide();
     });
@@ -391,8 +356,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Экспорт функций
 window.initMap = initMap;
 window.initCalculator = initCalculator;
 window.calculate = calculate;
 window.clearAll = clearAll;
+
