@@ -1,255 +1,209 @@
-// Инициализация карты
+// Глобальные переменные
 let map;
 let markers = [];
 let currentLine = null;
 
-// Инициализация карты при загрузке страницы
+// Инициализация карты
 function initMap() {
     console.log("Инициализация карты...");
     
-    // Центр России
+    if (!cities || cities.length === 0) {
+        console.error("Нет данных о городах!");
+        return;
+    }
+    
+    // Создаем карту
     map = L.map('map').setView([61.5240, 105.3188], 3);
     
     // Добавляем слой карты
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         attribution: '©OpenStreetMap, ©CartoDB',
-        subdomains: 'abcd',
-        maxZoom: 19
+        maxZoom: 19,
+        subdomains: 'abcd'
     }).addTo(map);
     
-    // Добавляем маркеры городов
-    addCityMarkers();
+    // Добавляем города
+    addCitiesToMap();
     
-    // Настройка событий
-    setupMapEvents();
+    // Настраиваем калькулятор
+    setupCalculator();
     
     console.log("Карта загружена!");
 }
 
-// Добавление маркеров городов
-function addCityMarkers() {
-    console.log("Добавление маркеров для", citiesData.length, "городов");
-    
-    // Очищаем старые маркеры
-    markers.forEach(marker => map.removeLayer(marker));
-    markers = [];
-    
-    citiesData.forEach(city => {
-        // Создаем маркер
-        const marker = L.circleMarker([city.lat, city.lon], {
-            radius: city.population > 1000000 ? 8 : 6,
-            fillColor: getRegionColor(city.region),
+// Добавление городов на карту
+function addCitiesToMap() {
+    cities.forEach(city => {
+        const lat = parseFloat(city.latitude);
+        const lon = parseFloat(city.longitude);
+        
+        const marker = L.circleMarker([lat, lon], {
+            radius: 6,
+            fillColor: '#00adb5',
             color: '#ffffff',
-            weight: 2,
+            weight: 1.5,
             opacity: 1,
             fillOpacity: 0.8
         });
         
-        // Добавляем всплывающую подсказку
         marker.bindPopup(`
-            <div style="color: #333; font-family: Arial, sans-serif;">
-                <h3 style="margin: 0 0 10px; color: #00adb5;">${city.name}</h3>
-                <p><strong>Население:</strong> ${city.population.toLocaleString()} чел.</p>
-                <p><strong>Регион:</strong> ${getRegionFullName(city.region)}</p>
-                <p><strong>Координаты:</strong> ${city.lat.toFixed(4)}°, ${city.lon.toFixed(4)}°</p>
-                ${city.capital ? '<p><strong>Административный центр</strong></p>' : ''}
-                <button onclick="selectCity(${city.id})" style="
-                    background: #00adb5;
-                    color: white;
-                    border: none;
-                    padding: 5px 10px;
-                    border-radius: 5px;
-                    cursor: pointer;
-                    margin-top: 10px;
-                ">Выбрать для расчета</button>
+            <div style="min-width: 200px;">
+                <h3 style="color: #00adb5; margin: 0 0 10px;">${city.city}</h3>
+                <p><strong>Регион:</strong> ${city.region}</p>
+                <p><strong>Координаты:</strong><br>${lat.toFixed(4)}°, ${lon.toFixed(4)}°</p>
             </div>
         `);
         
-        // Добавляем маркер на карту
         marker.addTo(map);
         markers.push(marker);
     });
 }
 
-// Получение цвета для региона
-function getRegionColor(region) {
-    const colors = {
-        'ЦФО': '#00adb5',
-        'СЗФО': '#00fff5',
-        'ЮФО': '#ff5722',
-        'СКФО': '#ff9800',
-        'ПФО': '#8bc34a',
-        'УФО': '#9c27b0',
-        'СФО': '#2196f3',
-        'ДФО': '#ffeb3b'
-    };
-    return colors[region] || '#cccccc';
-}
-
-// Полное название региона
-function getRegionFullName(region) {
-    const names = {
-        'ЦФО': 'Центральный федеральный округ',
-        'СЗФО': 'Северо-Западный федеральный округ',
-        'ЮФО': 'Южный федеральный округ',
-        'СКФО': 'Северо-Кавказский федеральный округ',
-        'ПФО': 'Приволжский федеральный округ',
-        'УФО': 'Уральский федеральный округ',
-        'СФО': 'Сибирский федеральный округ',
-        'ДФО': 'Дальневосточный федеральный округ'
-    };
-    return names[region] || region;
-}
-
-// Настройка событий карты
-function setupMapEvents() {
-    // Фильтр по регионам
-    document.getElementById('regionSelect')?.addEventListener('change', function(e) {
-        const region = e.target.value;
-        filterCitiesByRegion(region);
-    });
-    
-    // Кнопка "Показать все города"
-    document.getElementById('showAll')?.addEventListener('click', function() {
-        showAllCities();
-    });
-    
-    // Кнопка "Сбросить вид"
-    document.getElementById('resetView')?.addEventListener('click', function() {
-        map.setView([61.5240, 105.3188], 3);
-        showAllCities();
-    });
-    
-    // Кнопка "Показать путь"
-    document.getElementById('showPath')?.addEventListener('click', function() {
-        showPathBetweenSelectedCities();
-    });
-}
-
-// Фильтрация городов по региону
-function filterCitiesByRegion(region) {
-    if (region === 'all') {
-        showAllCities();
-        return;
-    }
-    
-    markers.forEach(marker => {
-        const cityId = parseInt(marker._popup._content.match(/selectCity\((\d+)\)/)?.[1]);
-        const city = citiesData.find(c => c.id === cityId);
-        
-        if (city && city.region === region) {
-            map.addLayer(marker);
-        } else {
-            map.removeLayer(marker);
-        }
-    });
-}
-
-// Показать все города
-function showAllCities() {
-    markers.forEach(marker => {
-        map.addLayer(marker);
-    });
-}
-
-// Показать путь между выбранными городами
-function showPathBetweenSelectedCities() {
+// Настройка калькулятора
+function setupCalculator() {
     const city1Select = document.getElementById('city1');
     const city2Select = document.getElementById('city2');
     
-    if (!city1Select || !city2Select) return;
+    if (city1Select && city2Select) {
+        // Заполняем списки
+        [city1Select, city2Select].forEach(select => {
+            select.innerHTML = '<option value="">Выберите город</option>';
+            cities.forEach((city, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = city.city;
+                select.appendChild(option);
+            });
+        });
+        
+        // События
+        document.getElementById('calculate')?.addEventListener('click', calculateDistance);
+        document.getElementById('clear')?.addEventListener('click', clearSelection);
+        
+        city1Select.addEventListener('change', () => {
+            if (city1Select.value && city2Select.value) {
+                calculateDistance();
+            }
+        });
+        
+        city2Select.addEventListener('change', () => {
+            if (city1Select.value && city2Select.value) {
+                calculateDistance();
+            }
+        });
+    }
+}
+
+// Расчет расстояния
+function calculateDistance() {
+    const city1Select = document.getElementById('city1');
+    const city2Select = document.getElementById('city2');
+    const resultDiv = document.getElementById('result');
+    
+    if (!city1Select || !city2Select || !resultDiv) return;
     
     const city1Id = parseInt(city1Select.value);
     const city2Id = parseInt(city2Select.value);
     
     if (!city1Id || !city2Id) {
-        alert('Выберите два города для построения пути!');
+        resultDiv.innerHTML = '<span style="color: #ff5722;">Выберите оба города!</span>';
         return;
     }
     
-    const city1 = citiesData.find(c => c.id === city1Id);
-    const city2 = citiesData.find(c => c.id === city2Id);
+    const city1 = cities[city1Id];
+    const city2 = cities[city2Id];
     
     if (!city1 || !city2) return;
     
-    // Удаляем старую линию
+    const lat1 = parseFloat(city1.latitude);
+    const lon1 = parseFloat(city1.longitude);
+    const lat2 = parseFloat(city2.latitude);
+    const lon2 = parseFloat(city2.longitude);
+    
+    const distance = calculateOrthodromicDistance(lat1, lon1, lat2, lon2);
+    
+    resultDiv.innerHTML = `
+        <div style="font-size: 1.2em; margin-bottom: 10px;">
+            <strong>${city1.city}</strong> → <strong>${city2.city}</strong>
+        </div>
+        <div style="font-size: 2.5em; color: #00fff5; font-weight: bold;">
+            ${distance.toLocaleString()} км
+        </div>
+    `;
+    
+    drawLineOnMap(city1, city2, distance);
+}
+
+// Расчет ортодромного расстояния
+function calculateOrthodromicDistance(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const toRad = deg => deg * Math.PI / 180;
+    
+    const φ1 = toRad(lat1);
+    const φ2 = toRad(lat2);
+    const Δφ = toRad(lat2 - lat1);
+    const Δλ = toRad(lon2 - lon1);
+    
+    const a = Math.sin(Δφ/2) * Math.sin(Δφ/2) +
+              Math.cos(φ1) * Math.cos(φ2) *
+              Math.sin(Δλ/2) * Math.sin(Δλ/2);
+    
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return Math.round(R * c);
+}
+
+// Рисование линии
+function drawLineOnMap(city1, city2, distance) {
     if (currentLine) {
         map.removeLayer(currentLine);
     }
     
-    // Создаем новую линию
+    const lat1 = parseFloat(city1.latitude);
+    const lon1 = parseFloat(city1.longitude);
+    const lat2 = parseFloat(city2.latitude);
+    const lon2 = parseFloat(city2.longitude);
+    
     currentLine = L.polyline([
-        [city1.lat, city1.lon],
-        [city2.lat, city2.lon]
+        [lat1, lon1],
+        [lat2, lon2]
     ], {
         color: '#00fff5',
         weight: 3,
-        opacity: 0.8,
-        dashArray: '10, 10'
+        opacity: 0.7
     }).addTo(map);
     
-    // Добавляем popup к линии
-    const distance = calculateDistance(city1, city2);
-    currentLine.bindPopup(`<b>${city1.name} → ${city2.name}</b><br>Расстояние: ${distance} км`);
-    
-    // Подсвечиваем выбранные города
-    markers.forEach(marker => {
-        const cityId = parseInt(marker._popup._content.match(/selectCity\((\d+)\)/)?.[1]);
-        if (cityId === city1Id || cityId === city2Id) {
-            marker.setStyle({ fillColor: '#ff5722', radius: 10 });
-        } else {
-            const city = citiesData.find(c => c.id === cityId);
-            marker.setStyle({ 
-                fillColor: getRegionColor(city.region),
-                radius: city.population > 1000000 ? 8 : 6
-            });
-        }
-    });
-    
-    // Центрируем карту на обоих городах
     const bounds = L.latLngBounds(
-        [city1.lat, city1.lon],
-        [city2.lat, city2.lon]
+        [lat1, lon1],
+        [lat2, lon2]
     );
-    map.fitBounds(bounds, { padding: [50, 50] });
+    map.fitBounds(bounds, { padding: [100, 100] });
 }
 
-// Выбор города для калькулятора
-function selectCity(cityId) {
-    const city = citiesData.find(c => c.id === cityId);
-    if (!city) return;
-    
+// Очистка
+function clearSelection() {
     const city1Select = document.getElementById('city1');
     const city2Select = document.getElementById('city2');
+    const resultDiv = document.getElementById('result');
     
-    if (city1Select && !city1Select.value) {
-        city1Select.value = cityId;
-    } else if (city2Select && !city2Select.value) {
-        city2Select.value = cityId;
-    } else {
-        // Если оба уже выбраны, спросим пользователя
-        if (confirm(`Заменить первый город на ${city.name}?`)) {
-            city1Select.value = cityId;
-        } else {
-            city2Select.value = cityId;
-        }
+    if (city1Select) city1Select.value = '';
+    if (city2Select) city2Select.value = '';
+    if (resultDiv) resultDiv.innerHTML = 'Выберите два города';
+    
+    if (currentLine) {
+        map.removeLayer(currentLine);
+        currentLine = null;
     }
     
-    // Обновляем визуальное выделение
-    markers.forEach(marker => {
-        const markerCityId = parseInt(marker._popup._content.match(/selectCity\((\d+)\)/)?.[1]);
-        if (markerCityId === cityId) {
-            marker.setStyle({ fillColor: '#ff5722', radius: 10 });
-        }
-    });
+    if (map) {
+        map.setView([61.5240, 105.3188], 3);
+    }
 }
 
-// Инициализация при загрузке страницы
+// Автоинициализация
 document.addEventListener('DOMContentLoaded', function() {
-    // Ждем загрузки Leaflet
-    setTimeout(initMap, 500);
+    setTimeout(() => {
+        if (document.getElementById('map') && typeof cities !== 'undefined') {
+            initMap();
+        }
+    }, 1000);
 });
-
-// Экспортируем функции для использования в других скриптах
-window.calculateDistance = calculateDistance;
-window.selectCity = selectCity;
