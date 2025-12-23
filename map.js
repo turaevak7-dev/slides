@@ -1,12 +1,12 @@
 // map.js - ПОЛНЫЙ РАБОЧИЙ КОД С КАЛЬКУЛЯТОРОМ
-console.log('⚡ map.js: Быстрая версия загружена');
+console.log('map.js: Быстрая версия загружена');
 
 document.addEventListener('DOMContentLoaded', function() {
     if (document.getElementById('map')) {
         console.log('Элемент карты найден, начинаем быструю инициализацию...');
         initializeFastMap();
     } else {
-        console.error('❌ Элемент с id="map" не найден!');
+        console.error(' Элемент с id="map" не найден!');
     }
 });
 
@@ -28,7 +28,7 @@ function initializeFastMap() {
             detectRetina: false
         }).addTo(map);
         
-        console.log('✅ Карта создана');
+        console.log(' Карта создана');
         
         // 3. ДОБАВЛЯЕМ ГОРОДА
         setTimeout(() => {
@@ -53,7 +53,7 @@ function initializeFastMap() {
                 text-align: center;
                 margin: 20px;
             ">
-                <h3>⚠️ Ошибка загрузки карты</h3>
+                <h3> Ошибка загрузки карты</h3>
                 <p>${error.message}</p>
                 <p>Проверьте консоль (F12) для подробностей</p>
             </div>
@@ -166,7 +166,7 @@ function addCitiesToMap(map) {
             `);
     });
     
-    console.log(`✅ Добавлено ${citiesData.length} городов`);
+    console.log(` Добавлено ${citiesData.length} городов`);
 }
 
 // 7. ПОЛНАЯ ФУНКЦИЯ КАЛЬКУЛЯТОРА (ИСПРАВЛЕННАЯ)
@@ -347,7 +347,7 @@ function initDistanceCalculator(map) {
                             ${city1.city} → ${city2.city}
                         </div>
                         <div style="margin-top: 10px; font-size: 12px; color: #888;">
-                            ✈️ Ортодромный путь
+                             Ортодромный путь
                         </div>
                     </div>
                 `;
@@ -377,5 +377,6 @@ function initDistanceCalculator(map) {
         console.log('Карта очищена');
     });
     
-    console.log('✅ Калькулятор инициализирован');
+    console.log('Калькулятор инициализирован');
 }
+
