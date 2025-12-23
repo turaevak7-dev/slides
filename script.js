@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             sideNav.classList.remove('active');
         }
     });
-// Отслеживаем переключение слайдов для карты
+
 function checkForMapSlide() {
     const activeSlide = document.querySelector('.slide.active');
     if (activeSlide && activeSlide.id === 'slide16') {
@@ -74,28 +74,22 @@ function checkForMapSlide() {
     }
 }
 
-// Проверяем при переключении слайдов
 document.addEventListener('slideChange', checkForMapSlide);
 
-// Проверяем при загрузке
 document.addEventListener('DOMContentLoaded', checkForMapSlide);
 });
-// Автоматическая инициализация карты при переходе на слайд 16
+
 document.addEventListener('DOMContentLoaded', function() {
-    // ... ваш существующий код ...
-    
-    // Следим за переключением слайдов
+
     const slidesObserver = new MutationObserver(function(mutations) {
         const activeSlide = document.querySelector('.slide.active');
         if (activeSlide && activeSlide.id === 'slide16') {
-            // Если карта еще не инициализирована, инициализируем
             if (!window.map && typeof initMap === 'function') {
                 setTimeout(initMap, 300);
             }
         }
     });
-    
-    // Начинаем наблюдение
+
     const slidesContainer = document.querySelector('.slides-container');
     if (slidesContainer) {
         slidesObserver.observe(slidesContainer, {
@@ -106,3 +100,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
