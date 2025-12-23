@@ -464,3 +464,62 @@ button:hover {
     background: none !important;
     border: none !important;
 }
+/* Дополнительные стили для карты */
+.leaflet-container {
+    font-family: 'Arial', sans-serif !important;
+    background: #1a1a2e !important;
+    color: #ffffff;
+}
+
+/* Маркеры кластеров */
+.marker-cluster-small {
+    background-color: rgba(0, 173, 181, 0.8) !important;
+}
+
+.marker-cluster-small div {
+    background-color: rgba(0, 173, 181, 0.9) !important;
+    color: white !important;
+}
+
+.marker-cluster-medium {
+    background-color: rgba(0, 173, 181, 0.8) !important;
+}
+
+.marker-cluster-medium div {
+    background-color: rgba(0, 173, 181, 0.9) !important;
+    color: white !important;
+}
+
+.marker-cluster-large {
+    background-color: rgba(0, 173, 181, 0.8) !important;
+}
+
+.marker-cluster-large div {
+    background-color: rgba(0, 173, 181, 0.9) !important;
+    color: white !important;
+}
+
+/* Выделение маршрута */
+.selected-route {
+    stroke: #ff5722 !important;
+    stroke-width: 4 !important;
+    stroke-opacity: 0.8 !important;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { stroke-width: 3px; }
+    50% { stroke-width: 5px; }
+    100% { stroke-width: 3px; }
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    #map {
+        height: 400px !important;
+    }
+    
+    .leaflet-popup-content {
+        font-size: 12px !important;
+    }
+}
