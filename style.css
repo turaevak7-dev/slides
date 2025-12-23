@@ -304,7 +304,6 @@ button:hover {
     background: rgba(76, 175, 80, 0.1);
     border-color: #4caf50;
 }
-/* === СТИЛИ ДЛЯ КАРТЫ === */
 #map {
     width: 100%;
     height: 500px;
@@ -314,19 +313,16 @@ button:hover {
     background: #1a1a2e;
 }
 
-/* Важно: стили Leaflet должны быть видны */
 .leaflet-container {
     font-family: 'Arial', sans-serif;
     background: #1a1a2e !important;
 }
 
-/* Стили для маркеров */
 .leaflet-popup-content {
     color: #333;
     font-size: 14px;
 }
 
-/* Стили для линии */
 .leaflet-pane svg path {
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -353,7 +349,6 @@ button:hover {
     overflow: visible !important;
 }
 
-/* Дебаг-стиль: если карта не видна */
 #map:empty::after {
     content: "Карта не загрузилась. Проверьте map.js";
     color: red;
@@ -364,7 +359,7 @@ button:hover {
     background: #ffcccc;
     border: 2px dashed red;
 }
-/* === СТИЛИ ДЛЯ КАРТЫ LEAFLET === */
+
 #map {
     width: 100%;
     height: 500px; /* ВАЖНО: фиксированная высота */
@@ -376,7 +371,7 @@ button:hover {
     z-index: 1;
 }
 
-/* Переопределяем стили Leaflet для вашей темы */
+
 .leaflet-container {
     font-family: 'Arial', sans-serif;
     background: #1a1a2e !important;
@@ -403,7 +398,6 @@ button:hover {
     background-color: #00fff5 !important;
 }
 
-/* Стили для всплывающих окон */
 .leaflet-popup-content-wrapper {
     background: #1a1a2e !important;
     color: #ffffff !important;
@@ -415,12 +409,10 @@ button:hover {
     background: #1a1a2e !important;
 }
 
-/* Стили для линии маршрута */
 .leaflet-pane svg path {
     stroke-linecap: round;
     stroke-linejoin: round;
 }
-/* Стили для линии между городами */
 .leaflet-pane .leaflet-overlay-pane svg path {
     stroke-linecap: round !important;
     stroke-linejoin: round !important;
@@ -433,7 +425,6 @@ button:hover {
     100% { stroke-width: 3px; }
 }
 
-/* Стили для подсвеченных маркеров */
 .highlighted-marker {
     filter: drop-shadow(0 0 10px #00fff5);
     z-index: 1000 !important;
@@ -443,35 +434,31 @@ button:hover {
     filter: drop-shadow(0 0 5px #00adb5);
 }
 
-/* Увеличьте z-index карты */
 #map {
     z-index: 10 !important;
 }
-/* Стили для выбранных маркеров */
+
 .selected-marker {
     filter: drop-shadow(0 0 10px #00fff5) !important;
     z-index: 1000 !important;
 }
 
-/* Стили для линии расстояния */
 .leaflet-pane .leaflet-overlay-pane svg path {
     stroke-linecap: round !important;
     stroke-linejoin: round !important;
 }
 
-/* Стили для надписи расстояния */
 .distance-label {
     background: none !important;
     border: none !important;
 }
-/* Дополнительные стили для карты */
+
 .leaflet-container {
     font-family: 'Arial', sans-serif !important;
     background: #1a1a2e !important;
     color: #ffffff;
 }
 
-/* Маркеры кластеров */
 .marker-cluster-small {
     background-color: rgba(0, 173, 181, 0.8) !important;
 }
@@ -499,7 +486,6 @@ button:hover {
     color: white !important;
 }
 
-/* Выделение маршрута */
 .selected-route {
     stroke: #ff5722 !important;
     stroke-width: 4 !important;
@@ -513,7 +499,6 @@ button:hover {
     100% { stroke-width: 3px; }
 }
 
-/* Адаптивность для мобильных */
 @media (max-width: 768px) {
     #map {
         height: 400px !important;
@@ -523,3 +508,4 @@ button:hover {
         font-size: 12px !important;
     }
 }
+
