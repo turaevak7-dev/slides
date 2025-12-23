@@ -17,8 +17,12 @@ document.addEventListener('DOMContentLoaded', function() {
     totalSpan.textContent = totalSlides;
     updateSlideCounter();
     
-    // Навигация по слайдам (без анимаций)
+    // Навигация по слайдам
     function goToSlide(n) {
+        // Проверяем границы
+        if (n < 0) n = totalSlides - 1;
+        if (n >= totalSlides) n = 0;
+        
         // Скрываем текущий слайд
         slides[currentSlide].classList.remove('active');
         
@@ -30,13 +34,12 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSlideCounter();
         
         // Если перешли на слайд с картой, инициализируем карту
-        if (currentSlide === 15 && typeof checkAndInitMap === 'function') {
-            setTimeout(checkAndInitMap, 100);
-        }
-        
-        // Если перешли на слайд с калькулятором, обновляем списки
-        if (currentSlide === 14) { // Слайд 15 - калькулятор
-            setTimeout(setupCalculator, 100);
+        if (currentSlide === 15) {
+            setTimeout(() => {
+                if (typeof initMap === 'function') {
+                    initMap();
+                }
+            }, 100);
         }
     }
     
@@ -48,25 +51,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateNavLinks() {
         navLinks.forEach(link => {
             link.classList.remove('active');
-            const href = link.getAttribute('href');
-            if (href === `#slide${currentSlide + 1}`) {
+            const targetSlide = parseInt(link.getAttribute('href').replace('#slide', ''));
+            if (targetSlide === currentSlide + 1) {
                 link.classList.add('active');
             }
         });
     }
     
     // События
-    prevBtn.addEventListener('click', () => {
-        let newSlide = currentSlide - 1;
-        if (newSlide < 0) newSlide = totalSlides - 1;
-        goToSlide(newSlide);
-    });
-    
-    nextBtn.addEventListener('click', () => {
-        let newSlide = currentSlide + 1;
-        if (newSlide >= totalSlides) newSlide = 0;
-        goToSlide(newSlide);
-    });
+    prevBtn.addEventListener('click', () => goToSlide(currentSlide - 1));
+    nextBtn.addEventListener('click', () => goToSlide(currentSlide + 1));
     
     navToggle.addEventListener('click', () => {
         sideNav.classList.toggle('active');
@@ -75,8 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
-            const href = link.getAttribute('href');
-            const targetSlide = parseInt(href.replace('#slide', '')) - 1;
+            const targetId = link.getAttribute('href');
+            const targetSlide = parseInt(targetId.replace('#slide', '')) - 1;
             goToSlide(targetSlide);
             sideNav.classList.remove('active');
         });
@@ -84,16 +78,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Горячие клавиши
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'ArrowLeft') {
-            let newSlide = currentSlide - 1;
-            if (newSlide < 0) newSlide = totalSlides - 1;
-            goToSlide(newSlide);
-        }
-        if (e.key === 'ArrowRight') {
-            let newSlide = currentSlide + 1;
-            if (newSlide >= totalSlides) newSlide = 0;
-            goToSlide(newSlide);
-        }
+        if (e.key === 'ArrowLeft') goToSlide(currentSlide - 1);
+        if (e.key === 'ArrowRight') goToSlide(currentSlide + 1);
         if (e.key === 'Escape') sideNav.classList.remove('active');
     });
     
